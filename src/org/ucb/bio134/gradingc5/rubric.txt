@@ -1,0 +1,48 @@
+test	count	description	note	deduction	mousepad
+testForbiddenSequences	0	Runs SequenceChecker on a  short protein	all pass	5	1000
+illigalDnaSeqTest	0	Checks for poly-A on problematic protein	all pass	5	1000
+testForbidden	0	Hard-coded sequence checker of a single short protein	all pass	5	1000
+					
+proteinsNumberTest	0	A composition with two proteins results in a construct with 2 Transcripts	all pass	5	1000
+					
+testCodonsLW	0	Checks that all the codons in a Construct have 3 bases	all pass	5	1000
+testTruism3x	0	A CDS is 3x the length of its encoded protein	all pass	5	1000
+testTruismTZ	0	There is one codon for each amino acid	all pass	10	1000
+					
+testHiddenStopCodonsTW	0	Test for internal step codons	all pass	5	1000
+testNoInternalStopCodons	0	Test for internal step codons	all pass	5	1000
+					
+testSecondary	0	Checks a Construct with one protein for excessive secondary structure	all pass	0	5
+					
+testTruismLW	0	A CDS starts with ATG	all pass	5	1000
+testTruismTeam3	0	A CDS starts with ATG	all pass	5	1000
+					
+testOnlyATGC	15	Tests if the CDS encoding is all ATCG	Error present	0	0
+testRandom	12	Performs 100000 randomly-generated tests	Few get through it, many timeouts, many mods of results to handle	0	5
+testGCContentJL	9	Tests if CDS encoding is between 40 and 60% GC	No start M	0	0
+testUpperAndLowerCaseJL	8	Tests if accepts upper and lowercase arguments	No start M	0	0
+avoidForbiddenSequence	6	Runs SequenceChecker on a sequence challenging for homopolymeric repeats	No start M	0	0
+testForbiddenSeqJL	6	Runs SequenceChecker on multiple problematic sequences	No start M	0	0
+testIncBy3JL	4	Check on length of the CDS	No start M	0	0
+gcContentinRange	4	Checks GC content on real case	Great test	0	5
+					
+testmRNALength	3	Check on length of the CDS	Good test	3	1000
+noArgumentTest	3	Tests that an empty protein throws an IllegalArgumentException	Good test, generic Exception would be good too	0	5
+illegalArgumentTest	3	Tests that proteins with X's throws an IllegalArgumentException	Good test, generic Exception would be good too	0	5
+testNonRandomnessSG	3	Check that the algorithm generates the same answer on the same inputs	Good test	2	1000
+testGCcontent	3	Checks GC content between 0.35 and 0.65	Good test, other GC one is better	0	5
+testTruismTeam3_2	2	Forbidden sequence checker	Valid	3	5
+testForbiddenSeqTZ	2	Forbidden sequence checker	Valid	3	5
+testLocalGC	2	Checks 60 bp window for GC content between .2 and 0.8	Should make a narrower window, 0.4-0.6	0	5
+testCustomConversion	2	Checks translation of CDS for a short peptide	No start M	0	0
+forbiddenSequenceTest	2	Forbidden sequence checker for poly-K edge case	Good test	2	5
+proteinConsistencyTestNH	2	Checks translation of CDS for a short peptide	Good test	3	1000
+proteinTranslationTestTZ	2	Checks translation of CDS for multiple proteins	Good test	3	1000
+testTruismTeam3_3	1	Checks translation of CDS for a short peptide	Good test	3	1000
+noForbiddenSequenceTestNH	1	Runs sequence checker on Construct for one protein	Valid	2	1000
+startCodonTest	1	Sequence starts with ATG	Valid	3	1000
+testGlobalGCcontentTZ	1	Global GC content is between 0.4 and 0.6	Good test	0	5
+Translate	1	I assume it checks translation, but can't find	Bad test naming	0	0
+testACTG	1	Checks for existance of all 4 bases	Not the right interepretation of truism	0	0
+testSimpleConversion	1	Checks translation of CDS for a protein	Good test	3	1000
+testAASequence	1	Checks translation of CDS for a protein	Good test	3	1000
