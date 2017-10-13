@@ -122,10 +122,12 @@ public class Project3Grader {
             Report report = nameToReport.get(studentName);
             List<String> allFails = extractAllFails(report);
             int gradeDeduction = scoreGrading(allFails);
+            String gradesummary = aggregateGradingFails(allFails);
             int mousepadDeduction = scoreMousepad(allFails);
+            String mousesummary = aggregateMousepadFails(allFails);
             long totalRuntime = scoreRuntime(report);
 
-            sb.append(studentName).append("\t").append(gradeDeduction).append("\t").append(mousepadDeduction).append("\t").append(totalRuntime).append("\n");
+            sb.append(studentName).append("\t").append(gradeDeduction).append("\t").append(mousepadDeduction).append("\t").append(totalRuntime).append("\t").append(gradesummary).append("\t").append(mousesummary).append("\n");
         }
 
         FileUtils.writeFile(sb.toString(), "Project3Results.txt");
@@ -219,6 +221,26 @@ public class Project3Grader {
             out += runtime;
         }
         return out;
+    }
+
+    private String aggregateGradingFails(List<String> allFails) {
+        StringBuilder out = new StringBuilder();
+        for(String testname : allFails) {
+            if(this.testToGradingDeduction.get(testname) > 0) {
+                out.append(testname).append(", ");
+            }
+        }
+        return out.toString();
+    }
+    
+    private String aggregateMousepadFails(List<String> allFails) {
+        StringBuilder out = new StringBuilder();
+        for(String testname : allFails) {
+            if(this.testToMousepadDeduction.get(testname) > 0) {
+                out.append(testname).append(", ");
+            }
+        }
+        return out.toString();
     }
 
 }
