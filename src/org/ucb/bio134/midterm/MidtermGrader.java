@@ -1,14 +1,7 @@
 package org.ucb.bio134.midterm;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.ucb.bio134.gradingc5.FileUtils;
 
 /**
@@ -77,14 +70,18 @@ public class MidtermGrader {
     }
     
     public void run() throws Exception {
-        StringBuilder report = new StringBuilder();
+        StringBuilder gradebook = new StringBuilder();
         for(String student : studentToResponses.keySet()) {
-            int grade = gradeStudent(report, student, studentToResponses.get(student));
+            int grade = gradeStudent(gradebook, student, studentToResponses.get(student));
         }
-        FileUtils.writeFile(report.toString(), "BioE134-2017-midterm.txt");
+        FileUtils.writeFile(gradebook.toString(), "BioE134-2017-midterm.txt");
+        
+        //Collect statistics
+        StringBuilder report = collectStatistics();
+        FileUtils.writeFile(report.toString(), "BioE134-2017-midterm-stats.txt");
     }
     
-    private int gradeStudent(StringBuilder report, String student, Map<String, String> responses) {
+    private int gradeStudent(StringBuilder gradebook, String student, Map<String, String> responses) {
         int out = BASEGRADE;
         
         StringBuilder answers = new StringBuilder();
@@ -100,8 +97,47 @@ public class MidtermGrader {
             out+=score;
         }
         
-        report.append(">").append(student).append("\t").append(out).append("\n");
-        report.append(answers).append("\n\n\n");
+        gradebook.append(">").append(student).append("\t").append(out).append("\n");
+        gradebook.append(answers).append("\n\n\n");
+        return out;
+    }
+    
+    private StringBuilder collectStatistics() {
+        StringBuilder out = new StringBuilder();
+        
+        HashMap<String, Map<String, Integer>> questionToCounts = new HashMap<>();
+        
+        //Count up each answer's occurance
+        for(String student : studentToResponses.keySet()) {
+            Map<String,String> responses = studentToResponses.get(student);
+            for(String question : responses.keySet()) {
+                String answer = responses.get(question);
+                Map<String, Integer> answerToCount = questionToCounts.get(question);
+                if(answerToCount == null) {
+                    answerToCount = new HashMap<>();
+                }
+                Integer count = answerToCount.get(answer);
+                if(count == null) {
+                    count = 0;
+                }
+                count++;
+                answerToCount.put(answer, count);
+                questionToCounts.put(question,answerToCount);
+            }
+        }
+        
+        //Create the report
+        for(String question : questionToCounts.keySet()) {
+            out.append("\n>").append(question).append("\n");
+            
+            Map<String, Integer> answerToCount = questionToCounts.get(question);
+            for(String answer : answerToCount.keySet()) {
+                Integer count = answerToCount.get(answer);
+                double percentage = 1.0*count/studentToResponses.size();
+//                double rounded = Math.round(percentage*100)/100;
+                out.append("").append(answer).append("\t").append(percentage).append("\n");
+            }
+        }
         return out;
     }
     
@@ -110,6 +146,7 @@ public class MidtermGrader {
         grader.initiate();
         grader.run();
     }
+
 
 
 }
