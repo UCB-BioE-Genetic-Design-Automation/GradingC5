@@ -1,0 +1,12 @@
+test	count	description	note	deduction	mousepad
+OverflowTest	4	Checks that no transfer volume is >1900uL		1	5000
+singleProtocolFile	2	A simple EIPCR experiment costs between $4 and $8		0	1
+absoluteMinCostTest	1	The cost of an experiment should be at least the cost of the enzymes		0	5000
+numAcqusitionsMastermixTest	4	Counts the number of preexisting tubes going into PCR		0	1
+ligationsOverflowTest	3	If 10000 uL of mastermix is needed, there are at least 5 tubes of it		0	1
+testGGEditingLibrary	1	The Function returns a reasonable solution to the Optimization example		1	5000
+pcrPlateUsage	6	For 96 PCRs, there are no more than 3 plates		0	1
+numContainersTest	3	For 24 EIPCR experiments, no more than 72 PCR tubes are consumed		0	1
+testPCR	1	Provides an example and multiple assertions of correctness		1	5000
+testDeterministic	1	Repetition of the same arguments results in same output		1	5000
+ligationsMastermixTest	10	Asserts that only one new  tube is consumed during ligation		0	0

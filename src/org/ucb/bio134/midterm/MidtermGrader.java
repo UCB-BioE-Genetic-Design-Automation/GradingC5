@@ -23,7 +23,7 @@ public class MidtermGrader {
         String keytext = FileUtils.readFile("/Users/jca20n/Dropbox (Personal)/Course - Genetic Design Automation/Grading/midterm_key.txt");
         String[] regions = keytext.split(">");
         for(String region : regions) {
-            String[] lines = region.split("\\r|\\r?\\n");
+            String[] lines = region.toUpperCase().split("\\r|\\r?\\n");
             String q1 = lines[0];
             Map<String,Integer> answers = questionToAnswers.get(q1);
             if(answers==null) {
@@ -48,7 +48,7 @@ public class MidtermGrader {
     private void populateExamAnswers() throws Exception {
         studentToResponses = new HashMap<>();
         String examstext = FileUtils.readFile("/Users/jca20n/Dropbox (Personal)/Course - Genetic Design Automation/Grading/midterm_answers.txt");
-        String[] lines = examstext.split("\\r|\\r?\\n");
+        String[] lines = examstext.toUpperCase().split("\\r|\\r?\\n");
         
         //Process the question names
         String[] qnames = lines[0].split("\t");

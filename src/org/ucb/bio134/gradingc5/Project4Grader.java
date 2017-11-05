@@ -15,25 +15,41 @@ import org.ucb.bio134.gradingc5.model.Result;
  *
  * @author J. Christopher Anderson
  */
-public class Project3Grader {
+public class Project4Grader {
     private  Map<String, Report> nameToReport;
     
     private Map<String, Integer> testToGradingDeduction;
     private Map<String, Integer> testToMousepadDeduction;
+    private Map<String, Prices> nameToPrices;
     
 
     public void initiate() throws Exception {
+        nameToPrices = new HashMap<>();
         nameToReport = new HashMap<>();
         
         //Parse the test results
-        File dir = new File("/Users/jca20n/Downloads/sub");
+        File dir = new File("/Users/jca20n/Downloads/submissions");
         for (File afile : dir.listFiles()) {
             
             try {
                 //Use JSoup to read the HTML
                 String text = FileUtils.readFile(afile.getAbsolutePath());
                 String studentname = afile.getName().replaceAll(".txt", "");
-                Report report = parseReport(text);
+                String[] sections = text.split("<><><><><>");
+                if(sections.length!=3) {
+                    System.out.println();
+                }
+                
+                try {
+                    Prices prices = new Prices(sections[0].trim());
+                    nameToPrices.put(studentname, prices);
+                } catch(Exception err) {
+                    System.out.println("Error on student " + studentname);
+                    System.out.println("price info:\n" + sections[0]);
+                    throw err;
+                }
+                
+                Report report = parseReport(sections[2].trim());
                 nameToReport.put(studentname, report);
             } catch(Exception err) {
                 System.out.println("Err:  " + afile.getName());
@@ -41,11 +57,13 @@ public class Project3Grader {
             }
         }
         
+//        countUpAndPrintResults();
+        
         //Parse the rubric
         testToGradingDeduction = new HashMap<>();
         testToMousepadDeduction = new HashMap<>();
         
-        String data = readResourceFile("rubric3.txt");
+        String data = readResourceFile("rubric4.txt");
         String[] lines = data.split("\\r|\\r?\\n");
         for(int i=1; i<lines.length; i++) {
             String aline = lines[i];
@@ -103,7 +121,10 @@ public class Project3Grader {
             }
         }
         for(int i=failIndex+1; i<lines.length; i++) {
-            failures.add(lines[i].trim());
+            String afail = lines[i].trim();
+            if(!afail.isEmpty()) {
+                failures.add(afail);
+            }
         }
         
         if(runtime == null) {
@@ -130,7 +151,20 @@ public class Project3Grader {
             sb.append(studentName).append("\t").append(gradeDeduction).append("\t").append(mousepadDeduction).append("\t").append(totalRuntime).append("\t").append(gradesummary).append("\t").append(mousesummary).append("\n");
         }
 
-        FileUtils.writeFile(sb.toString(), "Project3Results.txt");
+        FileUtils.writeFile(sb.toString(), "Project4Results.txt");
+        
+        sb = new StringBuilder();
+        sb.append("student\tBasicConversionTest\tMastermixTest\tOptimizationTest\tPriceCalculatorTest\tSemiprotocolPriceSimulatorTest\n");
+        for(String studentName : nameToPrices.keySet()) {
+            Prices prices = nameToPrices.get(studentName);
+            sb.append(studentName).append("\t");
+            sb.append(prices.BasicConversionTest).append("\t");
+            sb.append(prices.MastermixTest).append("\t");
+            sb.append(prices.OptimizationTest).append("\t");
+            sb.append(prices.PriceCalculatorTest).append("\t");
+            sb.append(prices.SemiprotocolPriceSimulatorTest).append("\n");
+        }
+        FileUtils.writeFile(sb.toString(), "Project4_prices.txt");
     }
     
     private void countUpAndPrintResults() throws Exception {
@@ -185,7 +219,7 @@ public class Project3Grader {
     
     
     public static void main(String[] args) throws Exception {
-        Project3Grader grader = new Project3Grader();
+        Project4Grader grader = new Project4Grader();
         grader.initiate();
         
         //Print out the test counts
