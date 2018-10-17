@@ -10,9 +10,9 @@ import org.ucb.bio134.gradingc5.FileUtils;
  */
 public class Midterm1Grader132 {
 
-    private Map<String, Map<String, Integer>> questionToAnswers;
+    private Map<String, Map<String, Double>> questionToAnswers;
     private Map<String, Map<String, String>> studentToResponses;
-    private final int BASEGRADE = 35;
+    private final double BASEGRADE = 25;
 
     public void initiate() throws Exception {
         populateRubric();
@@ -23,11 +23,12 @@ public class Midterm1Grader132 {
     private void populateRubric() throws Exception {
         questionToAnswers = new HashMap<>();
         String keytext = FileUtils.readFile("/Users/jca20n/Dropbox (Personal)/Courses/132/Devices 18/Grading/Spr18_BioE132_key.txt");
+        keytext = keytext.replaceAll("\"", "");
         String[] regions = keytext.split(">");
         for (String region : regions) {
             String[] lines = region.toUpperCase().split("\\r|\\r?\\n");
             String q1 = lines[0];
-            Map<String, Integer> answers = questionToAnswers.get(q1);
+            Map<String, Double> answers = questionToAnswers.get(q1);
             if (answers == null) {
                 answers = new HashMap<>();
             }
@@ -36,7 +37,7 @@ public class Midterm1Grader132 {
                 try {
                     String[] colons = lines[i].trim().split(":");
                     String abcd = colons[0].trim();
-                    int score = Integer.parseInt(colons[1].trim());
+                    double score = Double.parseDouble(colons[1].trim());
                     answers.put(abcd, score);
                 } catch (Exception err) {
                     System.out.println("error on" + lines[i] + "  " + q1);
@@ -50,6 +51,7 @@ public class Midterm1Grader132 {
     private void populateExamAnswers() throws Exception {
         studentToResponses = new HashMap<>();
         String examstext = FileUtils.readFile("/Users/jca20n/Dropbox (Personal)/Courses/132/Devices 18/Grading/Spr18_BioE132_answers.txt");
+        examstext = examstext.replaceAll("\"", "");
         String[] lines = examstext.toUpperCase().split("\\r|\\r?\\n");
 
         //Process the question names
@@ -74,7 +76,7 @@ public class Midterm1Grader132 {
     public void run() throws Exception {
         StringBuilder gradebook = new StringBuilder();
         for (String student : studentToResponses.keySet()) {
-            int grade = gradeStudent(gradebook, student, studentToResponses.get(student));
+            double grade = gradeStudent(gradebook, student, studentToResponses.get(student));
         }
         FileUtils.writeFile(gradebook.toString(), "/Users/jca20n/Dropbox (Personal)/Courses/132/Devices 18/Grading/BioE132-Spr18-midterm1.txt");
 
@@ -83,13 +85,13 @@ public class Midterm1Grader132 {
         FileUtils.writeFile(report.toString(), "/Users/jca20n/Dropbox (Personal)/Courses/132/Devices 18/Grading/BioE132-Spr18-midterm1-stats.txt");
     }
 
-    private int gradeStudent(StringBuilder gradebook, String student, Map<String, String> responses) {
-        int out = BASEGRADE;
+    private double gradeStudent(StringBuilder gradebook, String student, Map<String, String> responses) {
+        double out = BASEGRADE;
 
         StringBuilder answers = new StringBuilder();
         for (String question : responses.keySet()) {
             String answer = responses.get(question);
-            Integer score = this.questionToAnswers.get(question).get(answer);
+            Double score = this.questionToAnswers.get(question).get(answer);
             if (score == null) {
                 System.out.println("Missing score: " + student + " " + question + " " + answer);
                 System.exit(0);
@@ -136,7 +138,6 @@ public class Midterm1Grader132 {
             for (String answer : answerToCount.keySet()) {
                 Integer count = answerToCount.get(answer);
                 double percentage = 1.0 * count / studentToResponses.size();
-//                double rounded = Math.round(percentage*100)/100;
                 out.append("").append(answer).append("\t").append(percentage).append("\n");
             }
         }
